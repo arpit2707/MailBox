@@ -3,6 +3,7 @@ import Input from "../elements/Input";
 import Button from "../elements/Button";
 import axios from "axios";
 import { API } from "../../constants/api-config";
+import { Link } from "react-router-dom";
 const Signup = () => {
   const {
     handleSubmit,
@@ -21,21 +22,52 @@ const Signup = () => {
     }
   };
   return (
-    <div className="container">
+    <div className="container d-flex flex-column justify-content-center align-items-center">
       <form
         onSubmit={handleSubmit(submitHandler)}
-        className="d-flex flex-column justify-content-center align-items-center text-start"
+        className="d-flex flex-column mt-2 text-start"
+        style={{ width: "60%" }}
       >
-        <label>Name</label>
-        <input type="text" {...register("name", { required: true })} />
-        <label>Email</label>
-        <input type="email" {...register("email", { required: true })} />
-        <label>Phone</label>
-        <input type="number" {...register("phone", { required: true })} />
-        <label>Password</label>
-        <input type="password" {...register("password", { required: true })} />
-        <Button type="submit" context="Submit" />
+        <label className="mt-2">Name</label>
+        <input
+          style={{ width: "90%" }}
+          type="text"
+          {...register("name", { required: true })}
+          className="mt-2 border rounded border-dark"
+        />
+        <label className="mt-2">Email</label>
+        <input
+          style={{ width: "90%" }}
+          type="email"
+          {...register("email", { required: true })}
+          className="mt-2 border rounded border-dark"
+        />
+        <label className="mt-2">Phone</label>
+        <input
+          style={{ width: "90%" }}
+          type="number"
+          {...register("phone", { required: true })}
+          className="mt-2 border rounded border-dark"
+        />
+        <label className="mt-2">Password</label>
+        <input
+          style={{ width: "90%" }}
+          type="password"
+          {...register("password", { required: true })}
+          className="mt-2 border rounded border-dark"
+        />
+        <Button
+          type="submit"
+          context="Submit"
+          className="text-center mt-2 btn btn-primary w-25 align-self-center"
+        />
       </form>
+      <div className="d-flex flex-column">
+        <label>
+          Already an account?<Link to="/login">Login</Link>
+        </label>
+        <a href="">Forgot Password</a>
+      </div>
     </div>
   );
 };

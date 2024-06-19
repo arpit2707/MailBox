@@ -1,7 +1,7 @@
 const Button = (props) => {
-  const { context, type, onClick } = props;
+  const { context, type, onClick, className } = props;
   return (
-    <button type={type} onClick={onClick}>
+    <button className={className} type={type} onClick={onClick}>
       {context}
     </button>
   );
