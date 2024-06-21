@@ -22,10 +22,16 @@ const Signup = () => {
     }
   };
   return (
-    <div className="container d-flex flex-column justify-content-center align-items-center">
+    <div
+      style={{
+        backgroundImage: "linear-gradient(45deg, #fbeded, transparent)",
+        height: "90vh",
+      }}
+      className="container d-flex flex-column justify-content-center  align-items-center"
+    >
       <form
         onSubmit={handleSubmit(submitHandler)}
-        className="d-flex flex-column mt-2 text-start"
+        className="d-flex flex-column text-start"
         style={{ width: "60%" }}
       >
         <label className="mt-2">Name</label>

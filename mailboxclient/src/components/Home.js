@@ -1,7 +1,9 @@
+import Inbox from "./Inbox";
+
 const Home = () => {
   return (
     <div className="container">
-      <h3>Welcome</h3>
+      <Inbox />
     </div>
   );
 };

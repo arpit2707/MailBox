@@ -58,7 +58,7 @@ const MailBox = () => {
 
   const onclickBack = (e) => {
     e.preventDefault();
-    navigate("/inbox");
+    navigate("/home");
   };
 
   return (

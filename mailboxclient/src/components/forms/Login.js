@@ -3,7 +3,11 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { API } from "../../constants/api-config";
 import { useNavigate } from "react-router-dom";
+import { setUser, setToken } from "../../redux/userSlice";
+import { useSelector, useDispatch } from "react-redux";
 const Login = () => {
+  const dispatch = useDispatch();
+  const userReducer = useSelector((state) => state.user);
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -18,6 +22,7 @@ const Login = () => {
         userData: data,
       });
       console.log(response);
+      dispatch(setToken({ token: response.data.token }));
       localStorage.setItem("token", response.data.token);
       navigate("/home");
     } catch (error) {
