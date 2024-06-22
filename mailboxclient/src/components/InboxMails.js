@@ -26,6 +26,13 @@ const InboxMail = () => {
     fetchmails();
   }, []);
 
+  const deletMail = async () => {
+    const response = await axios.post(`${API}/api/mail/deletemail`, {
+      token: token,
+      mail: activeMail,
+    });
+  };
+
   const markRead = async (item) => {
     console.log(item);
     const response = await axios.post(`${API}/api/mail/readmail`, {
@@ -45,39 +52,26 @@ const InboxMail = () => {
           <tbody>
             {!mailactive &&
               mails &&
-              mails.map(
-                (item) => (
-                  <tr
-                    onClick={() => {
-                      setActiveMail((prevState) => item);
-                      setMailActive((prevState) => true);
-                      markRead(item);
-                    }}
-                  >
-                    <td>
-                      <input type="checkbox" />
-                    </td>
+              mails.map((item) => (
+                <tr
+                  onClick={() => {
+                    setActiveMail((prevState) => item);
+                    setMailActive((prevState) => true);
+                    markRead(item);
+                  }}
+                >
+                  <td>
+                    <input type="checkbox" />
+                  </td>
 
-                    <td>{!item.read ? <PiDotFill /> : "  "}</td>
+                  <td>{!item.read ? <PiDotFill /> : "  "}</td>
 
-                    <td>{item.subject}</td>
-                    <td>{item.mainContent}</td>
-                    <td></td>
-                    <td>March 15</td>
-                  </tr>
-                )
-
-                // <div className="col-10 d-flex justify-content-between">
-                //   <div className="col-2">
-                //     {/* <span style={{ color: "blue" }}>.</span> */}
-                //     <PiDotFill className="col-1" />
-                //     <input className="col-1" type="checkbox" />
-                //   </div>
-                //   <label className="col-2 fw-bolder ">title</label>
-                //   <p className="col-5 fw-bolder">descriptions</p>
-                //   <span className="col-1">{new Date().toString().slice(19, 25)}</span>
-                // </div>
-              )}
+                  <td>{item.subject}</td>
+                  <td>{item.mainContent}</td>
+                  <td></td>
+                  <td>March 15</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
@@ -102,7 +96,7 @@ const InboxMail = () => {
               <FaReply className="ms-4" />
               <BsForwardFill className="ms-4" />
             </div>
-            <MdDeleteForever className="ms-4" />
+            <MdDeleteForever onClick={deletMail} className="ms-4" />
           </div>
           <label className="align-self-start">Text Message</label>
           <div className="border border-dark rounded">
