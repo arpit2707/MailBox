@@ -1,5 +1,6 @@
 import { useState, useEffect, act } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { API } from "../constants/api-config";
 import InboxTags from "./InboxTags";
@@ -8,24 +9,71 @@ import { BiArrowBack } from "react-icons/bi";
 import { FaReply } from "react-icons/fa";
 import { BsForwardFill } from "react-icons/bs";
 import { MdDeleteForever } from "react-icons/md";
+import { setUnreadCount } from "../redux/mailSlice";
+import socket from "../socket/socketio";
+import { jwtDecode } from "jwt-decode";
 
 const InboxMail = () => {
   const [mailactive, setMailActive] = useState(false);
+  const dispatch = useDispatch();
   const [mails, setMails] = useState([]);
   const [activeMail, setActiveMail] = useState();
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const userReducer = useSelector((state) => state.user);
+  const mailReducer = useSelector((state) => state.mail);
   console.log("token", token);
   const fetchmails = async () => {
     const response = await axios.post(`${API}/api/mail/fetchmail`, {
       token: token,
     });
     setMails((prevState) => response.data.emails);
+    dispatch(setUnreadCount({ unread: response.data.count }));
   };
+  const sentmails = async () => {
+    const response = await axios.post(`${API}/api/mail/sentmail`, {
+      token: token,
+    });
+    console.log("CCAMTE TO SET SENT", response);
+    setMails((prevState) => response.data.emails);
+  };
+
+  const unreadMails = async () => {
+    const response = await axios.post(`${API}/api/mail/unreadmail`, {
+      token: token,
+    });
+    setMails((prevState) => response.data.emails);
+    dispatch(setUnreadCount({ unread: response.data.count }));
+  };
+  useEffect(() => {
+    if (mailReducer.selectedBox == "compose") {
+      navigate("/mail");
+    } else if (mailReducer.selectedBox == "Inbox") {
+      fetchmails();
+    } else if (mailReducer.selectedBox == "Unread") {
+      unreadMails();
+    } else if (mailReducer.selectedBox == "Starred") {
+    } else if (mailReducer.selectedBox == "Draft") {
+    } else if (mailReducer.selectedBox == "Sent") {
+      sentmails();
+    }
+  }, [mailReducer.selectedBox]);
   useEffect(() => {
     fetchmails();
   }, []);
-
+  const handleNewEmail = () => {
+    fetchmails();
+  };
+  console.log(userReducer);
+  useEffect(() => {
+    const decodedToken = jwtDecode(token);
+    console.log(`newemail${decodedToken.userId}`);
+    socket.on(`newemail${decodedToken.userId}`, handleNewEmail);
+    return () => {
+      socket.off(`newemail${decodedToken.userId}`, handleNewEmail);
+      socket.close();
+    };
+  }, [socket, token]);
   const deletMail = async () => {
     const response = await axios.post(`${API}/api/mail/deletemail`, {
       token: token,

@@ -1,18 +1,20 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 // import "../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useState } from "react";
 // import { backendURL } from "../utils/constants";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSelector } from "react-router-dom";
 import { API } from "../../constants/api-config";
 import axios from "axios";
 import Button from "../elements/Button";
+import socket from "../../socket/socketio";
 
 const MailBox = () => {
   const navigate = useNavigate();
   const emailTo = useRef();
   const subject = useRef();
+
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const handleEditorChange = (newEditorState) => {
     setEditorState(newEditorState);
@@ -40,6 +42,10 @@ const MailBox = () => {
         receiverEmail: formObj.to,
         mainContent: formObj.content,
       });
+      socket.on("new", () => {
+        console.log("NEW EMITTED");
+      });
+      socket.emit("emailsent", emailTo.current.value);
       console.log("RESPONSESS", response);
     } catch (error) {
       alert(error);
@@ -58,7 +64,7 @@ const MailBox = () => {
 
   const onclickBack = (e) => {
     e.preventDefault();
-    navigate("/home");
+    navigate(-1);
   };
 
   return (
