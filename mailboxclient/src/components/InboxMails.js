@@ -12,6 +12,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { setUnreadCount } from "../redux/mailSlice";
 import socket from "../socket/socketio";
 import { jwtDecode } from "jwt-decode";
+import useFetch from "../custom-hooks/Fetch";
 
 const InboxMail = () => {
   const [mailactive, setMailActive] = useState(false);
@@ -23,6 +24,18 @@ const InboxMail = () => {
   const userReducer = useSelector((state) => state.user);
   const mailReducer = useSelector((state) => state.mail);
   console.log("token", token);
+  const { data, loading, error } = useFetch(
+    `${API}/api/mail/fetchmail`,
+    "post",
+    { token: token }
+  );
+
+  useEffect(() => {
+    if (data) {
+      setMails(data.emails);
+      dispatch(setUnreadCount({ unread: data.count }));
+    }
+  }, [data, dispatch]);
   const fetchmails = async () => {
     const response = await axios.post(`${API}/api/mail/fetchmail`, {
       token: token,
@@ -58,9 +71,7 @@ const InboxMail = () => {
       sentmails();
     }
   }, [mailReducer.selectedBox]);
-  useEffect(() => {
-    fetchmails();
-  }, []);
+
   const handleNewEmail = () => {
     fetchmails();
   };

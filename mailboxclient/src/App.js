@@ -21,27 +21,41 @@ function App() {
   }, []);
   return (
     <Router>
-      <div className="App container ">
+      <div
+        className="App container "
+        style={{ backgroundColor: "#f5f5f5", height: "99vh" }}
+      >
         <Header />
-        <Routes>
-          <Route
-            path="/"
-            element={!userReducer.token ? <Signup /> : <Home />}
-          />
-          <Route
-            path="/login"
-            element={!userReducer.token ? <Login /> : <Home />}
-          />
+        <div
+          style={{
+            minHeight: "calc(80vh)",
+            borderRadius: "12px",
+            paddingRight: "82px",
+            marginBottom: "32px",
+            marginTop: "14px",
+            backgroundColor: "rgb(255, 255, 255)",
+          }}
+        >
+          <Routes>
+            <Route
+              path="/"
+              element={!userReducer.token ? <Signup /> : <Home />}
+            />
+            <Route
+              path="/login"
+              element={!userReducer.token ? <Login /> : <Home />}
+            />
 
-          <Route
-            path="/mail"
-            element={!userReducer.token ? <Login /> : <MailBox />}
-          />
-          <Route
-            path="/home"
-            element={!userReducer.token ? <Login /> : <Home />}
-          />
-        </Routes>
+            <Route
+              path="/mail"
+              element={!userReducer.token ? <Login /> : <MailBox />}
+            />
+            <Route
+              path="/home"
+              element={!userReducer.token ? <Login /> : <Home />}
+            />
+          </Routes>
+        </div>
       </div>
     </Router>
   );
